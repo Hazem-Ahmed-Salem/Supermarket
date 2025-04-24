@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Decrease Stock</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+            padding: 20px;
+        }
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #2d2d2d;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #b0b0b0;
+        }
+        select, input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #444;
+            border-radius: 4px;
+            background-color: #333;
+            color: #e0e0e0;
+        }
+        button {
+            background-color: #dc3545;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Decrease Stock</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <div id="product-image-container" style="margin: 15px 0; text-align: center; display: none;">
+                    <img id="product-image" src="" alt="Product Image" style="max-width: 200px; border-radius: 4px;">
+                </div>
+                <label for="product">Product:</label>
+                <select name="product" id="product" required>
+                    <option value="">Select a product</option>
+                    {% for product in products %}
+                        <option value="{{ product.id }}">{{ product.name }} (Current Stock: {{ product.get_stock_quantity }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="quantity">Quantity to Decrease:</label>
+                <input type="number" name="quantity" id="quantity" min="1" required>
+            </div>
+            <button type="submit">Decrease Stock</button>
+        </form>
+        <script>
+            document.getElementById('product').addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+                const productId = this.value;
+                const imageContainer = document.getElementById('product-image-container');
+                const productImage = document.getElementById('product-image');
+                
+                if (productId) {
+                    {% for product in products %}
+                        if (productId === "{{ product.id }}") {
+                            {% if product.image %}
+                                productImage.src = "{{ product.image.url }}";
+                                imageContainer.style.display = 'block';
+                            {% else %}
+                                imageContainer.style.display = 'none';
+                            {% endif %}
+                        }
+                    {% endfor %}
+                } else {
+                    imageContainer.style.display = 'none';
+                }
+            });
+        </script>
+    </div>
+</body>
+</html>
