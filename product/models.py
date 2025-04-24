@@ -40,7 +40,7 @@ class Product(models.Model):
 
 
 class Stock(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE,null=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField()
     supplier = models.CharField(max_length=255,null=True,blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
