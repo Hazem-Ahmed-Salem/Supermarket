@@ -34,7 +34,7 @@ def next_register_view(request):
         address = request.POST['address']
         city = request.POST['city']
         governorate = request.POST['governorate']
-        profile_picture = request.POST['profile_picture']
+        profile_picture = request.FILES['profile_picture']
         user = request.user
         Profile.objects.create(
             user=user,
@@ -44,7 +44,7 @@ def next_register_view(request):
             governorate=governorate,
             profile_picture=profile_picture,
         )
-        return redirect('login')
+        return redirect('profile')
         
     return render(request, 'user/next_register_page.html')
 
