@@ -1,76 +1,183 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Add Stock</title>
+    <title>Add Stock - DirectAdmin Style</title>
     <style>
+        :root {
+            --primary-color: #0066cc;
+            --danger-color: #dc3545;
+            --success-color: #28a745;
+            --border-color: #dee2e6;
+            --text-color: #333;
+            --bg-color: #f8f9fa;
+            --input-bg: #fff;
+            --header-bg: #f1f3f5;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #1a1a1a;
-            color: #e0e0e0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             margin: 0;
             padding: 20px;
+            line-height: 1.5;
         }
-        .form-container {
-            max-width: 600px;
+
+        .container {
+            max-width: 800px;
             margin: 0 auto;
-            background-color: #2d2d2d;
-            padding: 20px;
+            background-color: #fff;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
+        .page-header {
+            background-color: var(--header-bg);
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            border-radius: 8px 8px 0 0;
+        }
+
+        .page-header h2 {
+            margin: 0;
+            font-size: 24px;
+            color: var(--text-color);
+        }
+
+        .form-content {
+            padding: 20px;
+        }
+
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
+
         label {
             display: block;
-            margin-bottom: 5px;
-            color: #b0b0b0;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-color);
         }
+
         select, input {
             width: 100%;
-            padding: 8px;
-            border: 1px solid #444;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
             border-radius: 4px;
-            background-color: #333;
-            color: #e0e0e0;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            font-size: 14px;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
         }
-        button {
-            background-color: #1877f2;
-            color: white;
-            padding: 10px 20px;
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(0, 102, 204, 0.25);
+        }
+
+        .form-actions {
+            padding: 20px;
+            background-color: var(--header-bg);
+            border-top: 1px solid var(--border-color);
+            border-radius: 0 0 8px 8px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
             border: none;
             border-radius: 4px;
+            font-weight: 500;
             cursor: pointer;
-            width: 100%;
+            font-size: 14px;
+            transition: background-color 0.15s ease-in-out;
         }
-        button:hover {
-            background-color: #1464d8;
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .alert {
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 0 10px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="form-container">
-        <h2>Add Stock</h2>
+    <div class="container">
+        <div class="page-header">
+            <h2>Add Stock</h2>
+        </div>
         <form method="POST">
             {% csrf_token %}
-            <div class="form-group">
-                <label for="product">Product:</label>
-                <select name="product" id="product" required>
-                    <option value="">Select a product</option>
-                    {% for product in products %}
-                        <option value="{{ product.id }}">{{ product.name }}</option>
+            <div class="form-content">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                            {{ message }}
+                        </div>
                     {% endfor %}
-                </select>
+                {% endif %}
+                
+                <div class="form-group">
+                    <label for="product">Product:</label>
+                    <select name="product" id="product" required>
+                        <option value="">Select a product</option>
+                        {% for product in products %}
+                            <option value="{{ product.id }}">{{ product.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="stock">Quantity:</label>
+                    <input type="number" name="stock" id="stock" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="supplier">Supplier:</label>
+                    <input type="text" name="supplier" id="supplier">
+                </div>
             </div>
-            <div class="form-group">
-                <label for="stock">Quantity:</label>
-                <input type="number" name="stock" id="stock" min="1" required>
+            <div class="form-actions">
+                <a href="{% url 'product_list' %}" class="btn btn-danger">Cancel</a>
+                <button type="submit" class="btn btn-primary">Add Stock</button>
             </div>
-            <div class="form-group">
-                <label for="supplier">Supplier:</label>
-                <input type="text" name="supplier" id="supplier">
-            </div>
-            <button type="submit">Add Stock</button>
         </form>
     </div>
 </body>

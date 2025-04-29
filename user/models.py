@@ -44,7 +44,7 @@ class Profile(models.Model):
     address = models.TextField()
     city = models.CharField(max_length=100)
     governorate = models.CharField(max_length=100)
-    profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True)
+    profile_picture = models.ImageField(upload_to='profile_pictures/', default='default_profile.png')
 
     def __str__(self):
         return self.user.email

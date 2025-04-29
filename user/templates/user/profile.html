@@ -3,46 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
+    <title>User Profile - DirectAdmin Style</title>
+    <style>
+        :root {
+            --primary-blue: #1877f2;
+            --light-blue: #e8f0fe;
+            --border-color: #e1e4e8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .profile-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .profile-header {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .profile-picture {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--light-blue);
+            margin-bottom: 20px;
+        }
+
+        .profile-name {
+            font-size: 24px;
+            color: #444;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .profile-role {
+            color: var(--primary-blue);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .action-button {
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        .action-button.primary {
+            background-color: var(--primary-blue);
+            color: white;
+        }
+
+        .action-button.danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .action-button:hover {
+            opacity: 0.9;
+        }
+
+        .profile-section {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            color: #444;
+            font-weight: 500;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .info-item {
+            margin-bottom: 15px;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-size: 14px;
+            color: #444;
+            font-weight: 500;
+        }
+
+        .alert {
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background-color: #f1f8e9;
+            border: 1px solid #dcedc8;
+            color: #33691e;
+        }
+
+        .alert-error {
+            background-color: #fff2f2;
+            border: 1px solid #ffcdd2;
+            color: #d32f2f;
+        }
+    </style>
 </head>
-<body style="background-color: #1a1a1a; color: #ffffff;">
-    <h1 style="text-align: center; margin-top: 20px; color: #ffffff; font-family: 'Arial', sans-serif; font-size: 2.5em; text-transform: uppercase; letter-spacing: 2px; text-shadow: 2px 2px 4px rgba(255,255,255,0.1); padding-bottom: 10px;">User Profile</h1>
-
-    <div style="max-width: 600px; margin: 0 auto; padding: 20px; background-color: #2d2d2d; border-radius: 8px;">
-        {% if user.profile.profile_picture %}
-            <div style="text-align: center; margin-bottom: 20px;">
-                <img src="{{ user.profile.profile_picture.url }}" alt="Profile Picture" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid #0056b3;">
+<body>
+    <div class="profile-container">
+        <div class="profile-header">
+            {% if user.profile.profile_picture %}
+                <img src="{{ user.profile.profile_picture.url }}" alt="Profile Picture" class="profile-picture">
+            {% endif %}
+            <h1 class="profile-name">{{ user.first_name }} {{ user.last_name }}</h1>
+            <div class="profile-role">{{ user.user_role|title }}</div>
+            <div class="profile-actions">
+                <a href="{% url 'profile_edit' %}" class="action-button primary">Edit Profile</a>
+                <a href="{% url 'logout' %}" class="action-button danger">Logout</a>
             </div>
-        {% endif %}
-
-        <div style="margin-bottom: 15px;">
-            <h3 style="color: #66b3ff; margin-bottom: 5px;">Personal Information</h3>
-            <p style="margin: 5px 0;"><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
-            <p style="margin: 5px 0;"><strong>Email:</strong> {{ user.email }}</p>
-            <p style="margin: 5px 0;"><strong>Role:</strong> {{ user.user_role|title }}</p>
-            <p style="margin: 5px 0;"><strong>Member Since:</strong> {{ user.date_joined|date:"F d, Y" }}</p>
-        </div>
-
-        <div style="margin-bottom: 15px;">
-            <h3 style="color: #66b3ff; margin-bottom: 5px;">Contact Information</h3>
-            <p style="margin: 5px 0;"><strong>Phone Number:</strong> {{ user.profile.phone_number }}</p>
-            <p style="margin: 5px 0;"><strong>Address:</strong> {{ user.profile.address }}</p>
-            <p style="margin: 5px 0;"><strong>City:</strong> {{ user.profile.city }}</p>
-            <p style="margin: 5px 0;"><strong>Governorate:</strong> {{ user.profile.governorate }}</p>
-        </div>
-
-        <div style="text-align: center; margin-top: 20px;">
-            <a href="{% url 'profile_edit' %}" style="display: inline-block; padding: 10px 20px; background-color: #0056b3; color: white; text-decoration: none; border-radius: 4px; margin: 0 10px;">Edit Profile</a>
-            <a href="{% url 'logout' %}" style="display: inline-block; padding: 10px 20px; background-color: #dc3545; color: white; text-decoration: none; border-radius: 4px; margin: 0 10px;">Logout</a>
         </div>
 
         {% if messages %}
             {% for message in messages %}
-                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" style="padding: 10px; margin-top: 20px; border-radius: 4px; background-color: #442424; color: #ff9999; border: 1px solid #662424;">
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
                     {{ message }}
                 </div>
             {% endfor %}
         {% endif %}
+
+        <div class="profile-section">
+            <h2 class="section-title">Personal Information</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Email</div>
+                    <div class="info-value">{{ user.email }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Member Since</div>
+                    <div class="info-value">{{ user.date_joined|date:"F d, Y" }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Phone Number</div>
+                    <div class="info-value">{{ user.profile.phone_number }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-section">
+            <h2 class="section-title">Address Information</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Address</div>
+                    <div class="info-value">{{ user.profile.address }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">City</div>
+                    <div class="info-value">{{ user.profile.city }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Governorate</div>
+                    <div class="info-value">{{ user.profile.governorate }}</div>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>
